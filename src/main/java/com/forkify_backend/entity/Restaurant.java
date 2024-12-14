@@ -33,5 +33,5 @@ public class Restaurant {
     private String restaurantName;
 
     @OneToMany(mappedBy = "restaurant")
-    private Set<UserVisit> restaurants;
+    private Set<UserVisit> userVisits;
 }
