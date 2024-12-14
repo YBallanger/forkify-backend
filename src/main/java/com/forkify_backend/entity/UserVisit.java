@@ -41,7 +41,7 @@ public class UserVisit {
     @Column(name = "visit_date", nullable = false)
     private LocalDate visitDate;
 
-    @Column(name = "amoun_spent")
+    @Column(name = "amount_spent")
     private Double amountSpent;
 
     private Double rating;
