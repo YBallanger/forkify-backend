@@ -1,4 +1,4 @@
-package com.forkify_backend.entity;
+package com.forkify_backend.persistence.entity;
 
 import java.util.Set;
 
@@ -20,18 +20,18 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "restaurants")
-public class Restaurant {
+@Table(name = "users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "restaurant_id")
-    private Long restaurantId;
+    @Column(name = "user_id")
+    private Long userId;
 
     @NotBlank
-    @Column(name = "restaurant_name", nullable = false, length = 50)
-    private String restaurantName;
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "user")
     private Set<UserVisit> userVisits;
 }
