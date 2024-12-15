@@ -1,4 +1,4 @@
-package com.forkify_backend.entity;
+package com.forkify_backend.persistence.entity;
 
 import java.time.LocalDate;
 
