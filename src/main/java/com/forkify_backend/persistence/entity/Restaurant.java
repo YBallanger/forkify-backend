@@ -11,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "restaurants")
 public class Restaurant {
@@ -30,7 +32,11 @@ public class Restaurant {
 
     @NotBlank
     @Column(name = "restaurant_name", nullable = false, length = 50)
-    private String restaurantName;
+    private String name;
+
+    @NotBlank
+    @Column(name = "restaurant_address", nullable = false)
+    private String address;
 
     @OneToMany(mappedBy = "restaurant")
     private Set<UserVisit> userVisits;
