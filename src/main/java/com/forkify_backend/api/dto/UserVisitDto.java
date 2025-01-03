@@ -34,6 +34,6 @@ public class UserVisitDto {
     private Double amountSpent;
 
     @NotNull
-    @Positive
+    @PositiveOrZero
     private Double rating;
 }
