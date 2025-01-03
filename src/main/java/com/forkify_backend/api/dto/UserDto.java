@@ -1,5 +1,6 @@
 package com.forkify_backend.api.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,13 +11,6 @@ import lombok.Setter;
 @Setter
 @Builder
 public class UserDto {
+    @NotBlank
     String username;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 }
