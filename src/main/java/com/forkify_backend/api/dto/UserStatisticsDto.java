@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 public class UserStatisticsDto {
     @NotNull
-    @Positive
+    @PositiveOrZero
     Double amountSpent;
 
     @NotNull
