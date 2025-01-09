@@ -12,5 +12,11 @@ import lombok.Setter;
 @Builder
 public class UserDto {
     @NotBlank
+    String userId;
+
+    @NotBlank
+    String email;
+
+    @NotBlank
     String username;
 }

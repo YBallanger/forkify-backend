@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +17,7 @@ import lombok.Setter;
 public class UserVisitDto {
 
     @NotNull
-    private Long userId; //TODO a remplacer quand on pourra le recuperer avec un token de connexion
+    private String userId; //TODO a remplacer quand on pourra le recuperer avec un token de connexion
 
     @NotBlank
     private String name;
