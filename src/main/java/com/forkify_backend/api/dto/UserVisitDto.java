@@ -17,7 +17,7 @@ import lombok.Setter;
 public class UserVisitDto {
 
     @NotNull
-    private String userId; //TODO a remplacer quand on pourra le recuperer avec un token de connexion
+    private String userId;
 
     @NotBlank
     private String name;

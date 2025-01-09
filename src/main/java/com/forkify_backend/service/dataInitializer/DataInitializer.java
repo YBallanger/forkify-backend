@@ -1,6 +1,5 @@
 package com.forkify_backend.service.dataInitializer;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
