@@ -38,11 +38,15 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String token = request.getHeader("Authorization");
+        
+        System.out.println("TOKEN : " + token);
+        if (token == null) {
+            SecurityContextHolder.getContext().setAuthentication(null);
+            chain.doFilter(request, response);
+            return;
+        }
 
-        if (token == null)
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing token!");
-
-        FirebaseToken decodedToken = null;
+        FirebaseToken decodedToken;
         try {
             decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
         } catch (FirebaseAuthException e) {
@@ -57,7 +61,9 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
         Optional<User> userOptional = userRepository.findById(uid);
         if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException("User not found with Firebase UID: " + uid);
+            SecurityContextHolder.getContext().setAuthentication(null);
+            chain.doFilter(request, response);
+            return;
         }
 
         Set<Role> roles = userOptional.get().getRoles(); 
