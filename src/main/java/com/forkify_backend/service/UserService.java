@@ -24,6 +24,6 @@ public interface UserService {
      * @param userId l'id de l'utilisateur
      * @return le dto contenant les statistiques globales de l'utilisateur
      */
-    public UserStatisticsDto getUserStatistics(Long userId);
+    public UserStatisticsDto getUserStatistics(String userId);
 
 }

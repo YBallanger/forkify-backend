@@ -1,13 +1,9 @@
 package com.forkify_backend.persistence.entity;
 
-import java.util.Set;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -22,18 +18,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "restaurants")
-public class Restaurant {
-
+@Table(name = "role")
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "restaurant_id")
-    private Long restaurantId;
+    private Long id;
 
     @NotBlank
-    @Column(name = "restaurant_name", nullable = false, length = 50)
     private String name;
-
-    @OneToMany(mappedBy = "restaurant")
-    private Set<UserVisit> userVisits;
 }

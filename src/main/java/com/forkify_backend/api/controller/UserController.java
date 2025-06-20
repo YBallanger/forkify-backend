@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/statistics")
-    public ResponseEntity<UserStatisticsDto> getUserStatistics(@PathVariable Long id) {
+    public ResponseEntity<UserStatisticsDto> getUserStatistics(@PathVariable String id) {
         UserStatisticsDto userStatisticsDto = userService.getUserStatistics(id);
         return ResponseEntity.ok(userStatisticsDto);
     }
