@@ -39,7 +39,6 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = request.getHeader("Authorization");
         
-        System.out.println("TOKEN : " + token);
         if (token == null) {
             SecurityContextHolder.getContext().setAuthentication(null);
             chain.doFilter(request, response);

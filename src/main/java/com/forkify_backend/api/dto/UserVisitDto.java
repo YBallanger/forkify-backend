@@ -1,7 +1,5 @@
 package com.forkify_backend.api.dto;
 
-import java.time.LocalDate;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -20,13 +18,7 @@ public class UserVisitDto {
     private String userId;
 
     @NotBlank
-    private String name;
-
-    @NotBlank
-    private String address;
-
-    @NotNull
-    private LocalDate visitDate;
+    private String restaurantName;
 
     @NotNull
     @PositiveOrZero

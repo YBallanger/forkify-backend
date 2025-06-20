@@ -34,10 +34,6 @@ public class Restaurant {
     @Column(name = "restaurant_name", nullable = false, length = 50)
     private String name;
 
-    @NotBlank
-    @Column(name = "restaurant_address", nullable = false)
-    private String address;
-
     @OneToMany(mappedBy = "restaurant")
     private Set<UserVisit> userVisits;
 }
