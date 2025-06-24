@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -43,7 +43,7 @@ public class UserVisitServiceImpl implements UserVisitService {
                 .restaurant(restaurant)
                 .amountSpent(userVisitDto.getAmountSpent())
                 .rating(userVisitDto.getRating())
-                .visitDate(LocalDate.now())
+                .visitDate(LocalDateTime.now())
                 .build();
 
         userVisitRepository.save(userVisit);
