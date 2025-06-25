@@ -4,15 +4,12 @@ import com.forkify_backend.api.dto.*;
 import com.forkify_backend.persistence.entity.Role;
 import com.forkify_backend.persistence.entity.User;
 import com.forkify_backend.persistence.entity.UserVisit;
-import com.forkify_backend.persistence.repository.RoleRepository;
 import com.forkify_backend.persistence.repository.UserRepository;
-import com.forkify_backend.security.RoleConstants;
+import com.forkify_backend.service.AuthenticationService;
+import com.forkify_backend.service.RoleService;
 import com.forkify_backend.service.UserService;
 import com.forkify_backend.service.mapper.UserMapper;
 import com.forkify_backend.service.mapper.UserVisitMapper;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserRecord;
-import com.google.firebase.auth.UserRecord.CreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -26,42 +23,17 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
+    private final AuthenticationService authenticationService;
     private final UserMapper userMapper;
     private final UserVisitMapper userVisitMapper;
-    private final FirebaseAuth firebaseAuth; // Injection correcte
 
     @Override
     public User createUser(UserSignupDto userSignupDto) {
-        Optional<Role> roleOptional = roleRepository.findByName(RoleConstants.USER);
-        if (roleOptional.isEmpty()) {
-            throw new IllegalArgumentException("Role 'USER' not found in the database.");
-        }
-
-        if (userRepository.existsByEmail(userSignupDto.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email déjà utilisé.");
-        }
-
-        CreateRequest request = new CreateRequest()
-                .setEmail(userSignupDto.getEmail())
-                .setPassword(userSignupDto.getPassword())
-                .setDisplayName(userSignupDto.getUsername());
-
-        UserRecord userRecord;
-        try {
-            userRecord = firebaseAuth.createUser(request);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erreur lors de la création de l'utilisateur sur Firebase : " + e.getMessage());
-        }
-
-        User user = User.builder()
-                .userId(userRecord.getUid())
-                .username(userSignupDto.getUsername())
-                .email(userSignupDto.getEmail())
-                .userVisits(new HashSet<>())
-                .build();
+        Set<Role> roles = roleService.getDefaultRole();
+        String firebaseUid = authenticationService.FirebaseSignUp(userSignupDto.getEmail(), userSignupDto.getPassword());
+        User user = new User(userSignupDto, firebaseUid, roles);
         userRepository.save(user);
-
         return user;
     }
 
@@ -194,6 +166,15 @@ public class UserServiceImpl implements UserService {
                 .sorted(Comparator.comparing(UserRestaurantStatisticsDto::getAverageRating).reversed())
                 .limit(3)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Sauvegarde l'utilisateur en base de données.
+     *
+     * @param user L'utilisateur à sauvegarder.
+     */
+    private void saveUser(User user) {
+        userRepository.save(user);
     }
 
     private static class RestaurantStatisticsBuilder {

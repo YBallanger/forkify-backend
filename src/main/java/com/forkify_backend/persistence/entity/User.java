@@ -1,5 +1,6 @@
 package com.forkify_backend.persistence.entity;
 
+import com.forkify_backend.api.dto.UserSignupDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -33,4 +34,11 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<UserVisit> userVisits;
+
+    public User(UserSignupDto userSignupDto, String id, Set<Role> roles) {
+        this.userId = id;
+        this.email = userSignupDto.getEmail();
+        this.username = userSignupDto.getUsername();
+        this.roles = roles;
+    }
 }
