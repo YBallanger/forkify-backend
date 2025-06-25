@@ -1,9 +1,6 @@
 package com.forkify_backend.api.controller;
 
-import com.forkify_backend.api.dto.UserDto;
-import com.forkify_backend.api.dto.UserStatisticsDto;
-import com.forkify_backend.api.dto.UserTopRestaurantsDto;
-import com.forkify_backend.api.dto.UserVisitDto;
+import com.forkify_backend.api.dto.*;
 import com.forkify_backend.persistence.entity.User;
 import com.forkify_backend.security.CustomUserDetails;
 import com.forkify_backend.service.UserService;
@@ -27,12 +24,12 @@ public class UserController {
     /**
      * Crée un nouvel utilisateur.
      *
-     * @param userDto les informations de l'utilisateur à créer
+     * @param userSignupDto les informations de l'utilisateur à créer
      * @return une réponse HTTP 201 Created avec l'URI de la ressource créée
      */
     @PostMapping("")
-    public ResponseEntity<Void> createUser(@RequestBody UserDto userDto) {
-        User user = userService.createUser(userDto);
+    public ResponseEntity<Void> createUser(@RequestBody UserSignupDto userSignupDto) {
+        User user = userService.createUser(userSignupDto);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -61,19 +58,19 @@ public class UserController {
      */
     @GetMapping("/visits")
     public ResponseEntity<Set<UserVisitDto>> getConnectedUserVisits(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        Set<UserVisitDto> userVisitDtos = userService.getConnectedUserVisit(userDetails.getId());
+        Set<UserVisitDto> userVisitDtos = userService.getUserVisits(userDetails.getId());
         return ResponseEntity.ok(userVisitDtos);
     }
 
     /**
-     * Récupère les statistiques d'un utilisateur par son identifiant.
+     * Retourne les statistiques de l'utilisateur connecté.
      *
-     * @param id l'identifiant de l'utilisateur
-     * @return les statistiques de l'utilisateur
+     * @param userDetails Les informations de l'utilisateur connecté.
+     * @return Les statistiques de l'utilisateur connecté.
      */
-    @GetMapping("/{id}/statistics")
-    public ResponseEntity<UserStatisticsDto> getUserStatistics(@PathVariable String id) {
-        UserStatisticsDto userStatisticsDto = userService.getUserStatistics(id);
+    @GetMapping("/statistics")
+    public ResponseEntity<UserStatisticsDto> getConnectedUserStatistics(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserStatisticsDto userStatisticsDto = userService.getUserStatistics(userDetails.getId());
         return ResponseEntity.ok(userStatisticsDto);
     }
 

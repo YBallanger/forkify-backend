@@ -1,9 +1,6 @@
 package com.forkify_backend.service;
 
-import com.forkify_backend.api.dto.UserDto;
-import com.forkify_backend.api.dto.UserStatisticsDto;
-import com.forkify_backend.api.dto.UserTopRestaurantsDto;
-import com.forkify_backend.api.dto.UserVisitDto;
+import com.forkify_backend.api.dto.*;
 import com.forkify_backend.persistence.entity.User;
 
 import java.util.List;
@@ -14,14 +11,14 @@ public interface UserService {
     /**
      * crée un user
      *
-     * @param userDto le user à sauvergader en BDD
+     * @param userSignupDto le user à sauvergader en BDD
      * @return le user créé
      */
-    public User createUser(UserDto userDto);
+    public User createUser(UserSignupDto userSignupDto);
 
     public List<UserDto> getAllUsers();
 
-    public Set<UserVisitDto> getConnectedUserVisit(String userId);
+    public Set<UserVisitDto> getUserVisits(String userId);
 
     /**
      * récupère les statistics globales d'un user

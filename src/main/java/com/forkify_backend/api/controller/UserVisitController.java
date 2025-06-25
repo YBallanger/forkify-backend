@@ -15,7 +15,7 @@ import java.net.URI;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/user/visits")
+@RequestMapping("/user-visits")
 public class UserVisitController {
 
     private final UserVisitService userVisitService;

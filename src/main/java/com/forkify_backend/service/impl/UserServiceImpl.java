@@ -11,7 +11,8 @@ import com.forkify_backend.service.UserService;
 import com.forkify_backend.service.mapper.UserMapper;
 import com.forkify_backend.service.mapper.UserVisitMapper;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.CreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,27 +29,39 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final UserVisitMapper userVisitMapper;
+    private final FirebaseAuth firebaseAuth; // Injection correcte
 
     @Override
-    public User createUser(UserDto userDto) {
+    public User createUser(UserSignupDto userSignupDto) {
         Optional<Role> roleOptional = roleRepository.findByName(RoleConstants.USER);
         if (roleOptional.isEmpty()) {
             throw new IllegalArgumentException("Role 'USER' not found in the database.");
         }
 
+        if (userRepository.existsByEmail(userSignupDto.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email déjà utilisé.");
+        }
+
+        CreateRequest request = new CreateRequest()
+                .setEmail(userSignupDto.getEmail())
+                .setPassword(userSignupDto.getPassword())
+                .setDisplayName(userSignupDto.getUsername());
+
+        UserRecord userRecord;
         try {
-            FirebaseAuth.getInstance().getUser(userDto.getUserId());
-        } catch (FirebaseAuthException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid Firebase id", e);
+            userRecord = firebaseAuth.createUser(request);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erreur lors de la création de l'utilisateur sur Firebase : " + e.getMessage());
         }
 
         User user = User.builder()
-                .userId(userDto.getUserId())
-                .username(userDto.getUsername())
-                .email(userDto.getEmail())
+                .userId(userRecord.getUid())
+                .username(userSignupDto.getUsername())
+                .email(userSignupDto.getEmail())
                 .userVisits(new HashSet<>())
                 .build();
         userRepository.save(user);
+
         return user;
     }
 
@@ -59,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<UserVisitDto> getConnectedUserVisit(String userId) {
+    public Set<UserVisitDto> getUserVisits(String userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with id: " + userId));
         return userVisitMapper.userVisitsToUserVisitDtos(user.getUserVisits());
