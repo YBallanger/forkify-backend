@@ -13,9 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 public class UserTopRestaurantsDto {
 
-    private List<RestaurantStatisticsDto> mostVisitedRestaurants;
+    private List<UserRestaurantStatisticsDto> mostVisitedRestaurants;
 
-    private List<RestaurantStatisticsDto> highestSpendingRestaurants;
+    private List<UserRestaurantStatisticsDto> highestSpendingRestaurants;
 
-    private List<RestaurantStatisticsDto> bestRatedRestaurants;
+    private List<UserRestaurantStatisticsDto> bestRatedRestaurants;
 }

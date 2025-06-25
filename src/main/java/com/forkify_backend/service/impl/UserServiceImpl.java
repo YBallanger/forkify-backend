@@ -81,7 +81,6 @@ public class UserServiceImpl implements UserService {
             numberOfVisits++;
 
             Long restaurantId = userVisit.getRestaurant().getRestaurantId(); // Assumes userVisit has a Restaurant
-            // object with
             if (!visitedRestaurants.contains(restaurantId)) {
                 visitedRestaurants.add(restaurantId);
                 numberOfNewRestaurants++;
@@ -101,10 +100,10 @@ public class UserServiceImpl implements UserService {
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with id: " + userId));
 
         Map<String, RestaurantStatisticsBuilder> restaurantStatsMap = createRestaurantStatsMap(user);
-        List<RestaurantStatisticsDto> allRestaurantStats = createAllRestaurantStats(restaurantStatsMap);
-        List<RestaurantStatisticsDto> mostVisited = getMostVisitedRestaurants(allRestaurantStats);
-        List<RestaurantStatisticsDto> highestSpending = getHighestSpendingRestaurants(allRestaurantStats);
-        List<RestaurantStatisticsDto> bestRated = getBestRatedRestaurants(allRestaurantStats);
+        List<UserRestaurantStatisticsDto> allRestaurantStats = createAllRestaurantStats(restaurantStatsMap);
+        List<UserRestaurantStatisticsDto> mostVisited = getMostVisitedRestaurants(allRestaurantStats);
+        List<UserRestaurantStatisticsDto> highestSpending = getHighestSpendingRestaurants(allRestaurantStats);
+        List<UserRestaurantStatisticsDto> bestRated = getBestRatedRestaurants(allRestaurantStats);
 
         return UserTopRestaurantsDto.builder()
                 .mostVisitedRestaurants(mostVisited)
@@ -138,7 +137,7 @@ public class UserServiceImpl implements UserService {
      * @param restaurantStatsMap La map des statistiques des restaurants.
      * @return Une liste de statistiques pour chaque restaurant.
      */
-    private List<RestaurantStatisticsDto> createAllRestaurantStats(Map<String, RestaurantStatisticsBuilder> restaurantStatsMap) {
+    private List<UserRestaurantStatisticsDto> createAllRestaurantStats(Map<String, RestaurantStatisticsBuilder> restaurantStatsMap) {
         return restaurantStatsMap.values().stream()
                 .map(RestaurantStatisticsBuilder::build)
                 .toList();
@@ -150,9 +149,9 @@ public class UserServiceImpl implements UserService {
      * @param allRestaurantStats La liste de toutes les statistiques des restaurants.
      * @return Une liste des trois restaurants les plus visités.
      */
-    private List<RestaurantStatisticsDto> getMostVisitedRestaurants(List<RestaurantStatisticsDto> allRestaurantStats) {
+    private List<UserRestaurantStatisticsDto> getMostVisitedRestaurants(List<UserRestaurantStatisticsDto> allRestaurantStats) {
         return allRestaurantStats.stream()
-                .sorted(Comparator.comparing(RestaurantStatisticsDto::getVisitCount).reversed())
+                .sorted(Comparator.comparing(UserRestaurantStatisticsDto::getVisitCount).reversed())
                 .limit(3)
                 .collect(Collectors.toList());
     }
@@ -163,9 +162,9 @@ public class UserServiceImpl implements UserService {
      * @param allRestaurantStats La liste de toutes les statistiques des restaurants.
      * @return Une liste des trois restaurants avec le plus de dépenses.
      */
-    private List<RestaurantStatisticsDto> getHighestSpendingRestaurants(List<RestaurantStatisticsDto> allRestaurantStats) {
+    private List<UserRestaurantStatisticsDto> getHighestSpendingRestaurants(List<UserRestaurantStatisticsDto> allRestaurantStats) {
         return allRestaurantStats.stream()
-                .sorted(Comparator.comparing(RestaurantStatisticsDto::getTotalAmountSpent).reversed())
+                .sorted(Comparator.comparing(UserRestaurantStatisticsDto::getTotalAmountSpent).reversed())
                 .limit(3)
                 .collect(Collectors.toList());
     }
@@ -176,15 +175,14 @@ public class UserServiceImpl implements UserService {
      * @param allRestaurantStats La liste de toutes les statistiques des restaurants.
      * @return Une liste des trois restaurants les mieux notés.
      */
-    private List<RestaurantStatisticsDto> getBestRatedRestaurants(List<RestaurantStatisticsDto> allRestaurantStats) {
+    private List<UserRestaurantStatisticsDto> getBestRatedRestaurants(List<UserRestaurantStatisticsDto> allRestaurantStats) {
         return allRestaurantStats.stream()
                 .filter(stats -> stats.getAverageRating() != null)
-                .sorted(Comparator.comparing(RestaurantStatisticsDto::getAverageRating).reversed())
+                .sorted(Comparator.comparing(UserRestaurantStatisticsDto::getAverageRating).reversed())
                 .limit(3)
                 .collect(Collectors.toList());
     }
 
-    // Classe utilitaire pour construire les statistiques des restaurants
     private static class RestaurantStatisticsBuilder {
         private final String restaurantName;
         private double totalAmount = 0.0;
@@ -209,9 +207,9 @@ public class UserServiceImpl implements UserService {
             visitCount++;
         }
 
-        public RestaurantStatisticsDto build() {
+        public UserRestaurantStatisticsDto build() {
             Double averageRating = ratingCount > 0 ? Math.round((totalRating / ratingCount) * 100.0) / 100.0 : null;
-            return RestaurantStatisticsDto.builder()
+            return UserRestaurantStatisticsDto.builder()
                     .restaurantName(restaurantName)
                     .totalAmountSpent(totalAmount)
                     .averageRating(averageRating)
