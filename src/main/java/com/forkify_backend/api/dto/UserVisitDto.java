@@ -8,21 +8,20 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
 public class UserVisitDto {
 
-    @NotNull
-    private String userId;
-
     @NotBlank
     private String restaurantName;
 
     @NotNull
     @PositiveOrZero
-    private Double amountSpent;
+    private BigDecimal amountSpent;
 
     @NotNull
     @PositiveOrZero

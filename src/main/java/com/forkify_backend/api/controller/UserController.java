@@ -81,7 +81,7 @@ public class UserController {
      * @return les trois listes des restaurants préférés de l'utilisateur
      */
     @GetMapping("/top-restaurants")
-    public ResponseEntity<UserTopRestaurantsDto> getUserTopRestaurants(
+    public ResponseEntity<UserTopRestaurantsDto> getConnectedUserTopRestaurants(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
         UserTopRestaurantsDto topRestaurants = userService.getUserTopRestaurants(userDetails.getId());
         return ResponseEntity.ok(topRestaurants);

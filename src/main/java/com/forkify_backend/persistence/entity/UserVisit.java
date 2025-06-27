@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,7 +18,7 @@ public class UserVisit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_visit_id")
+    @Column(name = "id")
     private Long userVisitId;
 
     @ManyToOne
@@ -33,7 +34,7 @@ public class UserVisit {
     private LocalDateTime visitDate;
 
     @Column(name = "amount_spent")
-    private Double amountSpent;
+    private BigDecimal amountSpent;
 
     private Double rating;
 

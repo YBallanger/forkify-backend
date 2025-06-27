@@ -7,10 +7,11 @@ public interface UserVisitService {
 
     /**
      * crée une visite d'un utilisateur
-     * 
+     *
+     * @param userId       l'identifiant de l'utilisateur
      * @param userVisitDto la visite à sauvergader en BDD
      * @return la visite créée
      */
-    public UserVisit createUserVisit(UserVisitDto userVisitDto);
+    public UserVisit createUserVisit(String userId, UserVisitDto userVisitDto);
 
 }

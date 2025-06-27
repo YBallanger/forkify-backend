@@ -2,9 +2,11 @@ package com.forkify_backend.api.controller;
 
 import com.forkify_backend.api.dto.UserVisitDto;
 import com.forkify_backend.persistence.entity.UserVisit;
+import com.forkify_backend.security.CustomUserDetails;
 import com.forkify_backend.service.UserVisitService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +29,8 @@ public class UserVisitController {
      * @return une réponse HTTP 201 Created avec l'URI de la ressource créée
      */
     @PostMapping("")
-    public ResponseEntity<Void> createUserVisit(@RequestBody UserVisitDto userVisitDto) {
-        UserVisit userVisit = userVisitService.createUserVisit(userVisitDto);
+    public ResponseEntity<Void> createUserVisit(@RequestBody UserVisitDto userVisitDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserVisit userVisit = userVisitService.createUserVisit(userDetails.getId(), userVisitDto);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(userVisit.getUserVisitId())

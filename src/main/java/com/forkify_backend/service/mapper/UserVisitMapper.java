@@ -10,10 +10,9 @@ import java.util.Set;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface UserVisitMapper {
-    
+
     UserVisit userVisitDtoToUserVisit(UserVisitDto userVisitDto);
 
-    @Mapping(target = "userId", source = "user.userId")
     @Mapping(target = "restaurantName", source = "restaurant.name")
     UserVisitDto userVisitToUserVisitDto(UserVisit userVisit);
 

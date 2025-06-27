@@ -1,5 +1,6 @@
 package com.forkify_backend.api.dto;
 
+import com.forkify_backend.api.dto.restaurant_statistics_dtos.RestaurantStatisticsDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 public class UserTopRestaurantsDto {
 
-    private List<UserRestaurantStatisticsDto> mostVisitedRestaurants;
+    private List<RestaurantStatisticsDto> mostVisitedRestaurants;
 
-    private List<UserRestaurantStatisticsDto> highestSpendingRestaurants;
+    private List<RestaurantStatisticsDto> highestSpendingRestaurants;
 
-    private List<UserRestaurantStatisticsDto> bestRatedRestaurants;
+    private List<RestaurantStatisticsDto> bestRatedRestaurants;
 }
