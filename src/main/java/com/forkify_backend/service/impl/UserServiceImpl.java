@@ -39,8 +39,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(UserSignupDto userSignupDto) {
         Set<Role> roles = roleService.getDefaultRole();
-        String firebaseUid = authenticationService.FirebaseSignUp(userSignupDto.getEmail(), userSignupDto.getPassword());
-        User user = new User(userSignupDto, firebaseUid, roles);
+        User user = new User(userSignupDto, roles);
         userRepository.save(user);
         return user;
     }

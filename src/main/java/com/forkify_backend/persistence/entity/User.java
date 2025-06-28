@@ -35,8 +35,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserVisit> userVisits;
 
-    public User(UserSignupDto userSignupDto, String id, Set<Role> roles) {
-        this.userId = id;
+    public User(UserSignupDto userSignupDto, Set<Role> roles) {
+        this.userId = userSignupDto.getId();
         this.email = userSignupDto.getEmail();
         this.username = userSignupDto.getUsername();
         this.roles = roles;

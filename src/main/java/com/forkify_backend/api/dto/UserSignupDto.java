@@ -12,11 +12,12 @@ import lombok.Setter;
 @Builder
 public class UserSignupDto {
     @NotBlank
+    private String id;
+    
+    @NotBlank
     private String email;
 
     @NotBlank
     private String username;
 
-    @NotBlank
-    private String password;
 }
