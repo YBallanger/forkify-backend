@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -14,7 +16,7 @@ import lombok.Setter;
 public class UserStatisticsDto {
     @NotNull
     @PositiveOrZero
-    Double amountSpent;
+    BigDecimal amountSpent;
 
     @NotNull
     @PositiveOrZero

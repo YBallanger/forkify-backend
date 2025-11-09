@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -25,10 +25,10 @@ public class UserVisitServiceImpl implements UserVisitService {
     private final RestaurantRepository restaurantRepository;
 
     @Override
-    public UserVisit createUserVisit(UserVisitDto userVisitDto) {
+    public UserVisit createUserVisit(String userId, UserVisitDto userVisitDto) {
         Optional<Restaurant> restauranOptional = restaurantRepository.findByName(
                 userVisitDto.getRestaurantName());
-        Optional<User> userOptional = userRepository.findById(userVisitDto.getUserId());
+        Optional<User> userOptional = userRepository.findById(userId);
 
         Restaurant restaurant = restauranOptional.orElseGet(() -> {
             Restaurant newRestaurant = Restaurant.builder()
@@ -43,7 +43,7 @@ public class UserVisitServiceImpl implements UserVisitService {
                 .restaurant(restaurant)
                 .amountSpent(userVisitDto.getAmountSpent())
                 .rating(userVisitDto.getRating())
-                .visitDate(LocalDate.now())
+                .visitDate(LocalDateTime.now())
                 .build();
 
         userVisitRepository.save(userVisit);

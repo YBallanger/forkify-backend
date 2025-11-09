@@ -1,11 +1,15 @@
 package com.forkify_backend.security;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.forkify_backend.persistence.entity.Role;
+import com.forkify_backend.persistence.entity.User;
+import com.forkify_backend.persistence.repository.UserRepository;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,17 +20,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.forkify_backend.persistence.entity.Role;
-import com.forkify_backend.persistence.entity.User;
-import com.forkify_backend.persistence.repository.UserRepository;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class FirebaseTokenFilter extends OncePerRequestFilter {
@@ -38,7 +36,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String token = request.getHeader("Authorization");
-        
+
         if (token == null) {
             SecurityContextHolder.getContext().setAuthentication(null);
             chain.doFilter(request, response);
@@ -65,18 +63,19 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
             return;
         }
 
-        Set<Role> roles = userOptional.get().getRoles(); 
+        Set<Role> roles = userOptional.get().getRoles();
 
         if (roles == null || roles.isEmpty()) {
             throw new UsernameNotFoundException("User has no roles assigned.");
         }
 
         List<SimpleGrantedAuthority> authorities = roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))                                                     
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
 
+        CustomUserDetails customUserDetails = new CustomUserDetails(userOptional.get());
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                email, null, authorities);
+                customUserDetails, null, authorities);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
